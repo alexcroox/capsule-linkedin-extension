@@ -1,4 +1,5 @@
 let hasApiKey = false
+let profileAlreadyInCapsule = false
 
 chrome.runtime.sendMessage({ 'message': 'hasApiKey' }, response => {
     hasApiKey = response.hasApiKey
@@ -16,11 +17,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             break
 
         case "contactExists":
-            if (request.data === true)
+            if (request.data === true) {
                 $('#capsule-linkedin')
                 .addClass('disabled')
                 .find('span')
                 .html('Already in Capsule')
+
+                profileAlreadyInCapsule = true
+            }
             break
 
         case "profileSaved":
@@ -67,16 +71,37 @@ function saveProfileToCapsule() {
 }
 
 function checkProfile() {
+    console.log('CL: Checking for profile')
+
+    profileAlreadyInCapsule = false
+
     // Only add the button if we are on a LinkedIn profile page
     if ($('.profile-detail').length) {
+
+        console.log('CL: Found profile')
 
         $('#capsule-linkedin').remove()
 
         const $button = $('<a href="#" id="capsule-linkedin" class="button-primary-large mh1"><span class="pv-s-profile-actions__label">Add to Capsule</span></a>')
-        $('.pv-top-card-section__actions.pv-top-card-section__actions--at-top').append($button)
-
+        
         const name = $('.pv-top-card-section__information .pv-top-card-section__name').text()
         chrome.runtime.sendMessage({ 'message': 'checkProfile', 'data': name })
+
+        // Wait for SPA to finish rendering before injecting button
+        let waitForPage = setInterval(function() {
+
+            if ($('.pv-top-card-section__actions.pv-top-card-section__actions--at-top').length) {
+
+                clearInterval(waitForPage);
+                $('.pv-top-card-section__actions.pv-top-card-section__actions--at-top').append($button)
+
+                if (profileAlreadyInCapsule)
+                    $('#capsule-linkedin')
+                        .addClass('disabled')
+                        .find('span')
+                        .html('Already in Capsule')
+            }
+        }, 500);
 
         $button.on('click', function(e) {
 
@@ -100,5 +125,8 @@ function checkProfile() {
             }
         })
 
+    } else {
+        console.log('CL: No profile found');
+        chrome.runtime.sendMessage({ 'message': 'noProfileFound' })
     }
 }
