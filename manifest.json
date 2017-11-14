@@ -1,0 +1,27 @@
+{
+    "manifest_version": 2,
+    "name": "CapsuleLinkedIn",
+    "description": "Adds a 'Add to Capsule' button on LinkedIn profile pages",
+    "version": "0.2",
+    "author": "Si digital",
+    "homepage_url": "https://sidigital.co",
+    "permissions": ["activeTab", "storage", "webNavigation"],
+    "content_scripts": [
+    {
+        "matches": ["https://www.linkedin.com/in/*"],
+        "js": ["third-party-js/jquery.js", "add-to-capsule.js"]
+    }],
+    "content_security_policy": "script-src 'self' https://linkedin.com; object-src 'self'",
+    "browser_action":
+    {
+        "default_icon": "icon.png",
+        "default_title": "Enter Capsule CRM API Key"
+    },
+    "background": {
+        "scripts": [
+            "third-party-js/axios.js",
+            "background.js"
+        ],
+        "persistent": true
+    }
+}
