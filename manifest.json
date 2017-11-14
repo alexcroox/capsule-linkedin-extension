@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "CapsuleLinkedIn",
     "description": "Adds a 'Add to Capsule' button on LinkedIn profile pages",
-    "version": "0.3",
+    "version": "0.4",
     "author": "Si digital",
     "homepage_url": "https://sidigital.co",
     "permissions": ["activeTab", "storage", "webNavigation"],

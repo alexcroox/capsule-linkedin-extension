@@ -17,13 +17,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             break
 
         case "contactExists":
-            if (request.data === true) {
+            if (request.data !== false) {
                 $('#capsule-linkedin')
                 .addClass('disabled')
+                .attr('href', request.data)
                 .find('span')
                 .html('Already in Capsule')
 
-                profileAlreadyInCapsule = true
+                profileAlreadyInCapsule = request.data
             }
             break
 
@@ -98,6 +99,7 @@ function checkProfile() {
                 if (profileAlreadyInCapsule)
                     $('#capsule-linkedin')
                         .addClass('disabled')
+                        .attr('href', profileAlreadyInCapsule)
                         .find('span')
                         .html('Already in Capsule')
             }
@@ -108,7 +110,7 @@ function checkProfile() {
             e.preventDefault()
 
             if ($(this).hasClass('disabled')) {
-                alert('This contact is already in Capsule')
+                window.open($(this).attr('href'), '_blank')
                 return
             }
 
@@ -117,7 +119,9 @@ function checkProfile() {
 
                 if (apiKey && apiKey != "") {
                     chrome.runtime.sendMessage({ 'message': 'setApiKey', 'data': apiKey }, response => {
-                        saveProfileToCapsule()
+                        setTimeout(function() {
+                            saveProfileToCapsule()
+                        }, 2000)
                     })
                 }
             } else {

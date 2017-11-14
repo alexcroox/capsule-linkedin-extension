@@ -51,9 +51,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
         case "checkProfile":
             findContact(request.data)
-                .then(() => {
+                .then(profileUrl => {
                     console.log(request.data, 'exists')
-                    sendMessageToContent({ 'message': 'contactExists', 'data': true })
+                    sendMessageToContent({ 'message': 'contactExists', 'data': profileUrl })
                 })
                 .catch(() => {
                     console.log(request.data, 'doesnt exist')
@@ -143,7 +143,7 @@ function findContact(name) {
             .then(response => {
                 console.log(response.data)
                 if (response.data.parties.length)
-                    resolve()
+                    resolve(`${siteUrl}/party/${response.data.parties[0].id}`)
                 else
                     reject()
             })
