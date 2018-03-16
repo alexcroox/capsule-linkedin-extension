@@ -5,7 +5,7 @@ Easily add a new contact to your Capsule CRM from LinkedIn profile pages
 
 ## Installing
 
-Install from the [Google Chrome Web Store](xx)
+Install from the [Google Chrome Web Store](https://chrome.google.com/webstore/detail/capsulelinkedin/pppcofmkclmepicdgjaafakiaogjcgll)
 
 
 ## Using
